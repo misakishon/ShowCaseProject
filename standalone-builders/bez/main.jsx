@@ -178,7 +178,26 @@ function BezStandaloneApp() {
                 ]);
             }
             if (p.startsWith('/api/barbers/') && p.endsWith('/rate')) {
-                return json({ success: true, message: 'Thank you for rating!' });
+                const match = p.match(/\/api\/barbers\/(\d+)\/rate/);
+                const id = match ? Number(match[1]) : null;
+                let submittedRating = 5;
+                try {
+                    const parsedBody = init?.body ? JSON.parse(init.body) : {};
+                    if (Number.isFinite(Number(parsedBody.rating))) {
+                        submittedRating = Math.max(1, Math.min(5, Number(parsedBody.rating)));
+                    }
+                } catch {}
+                const target = barbers.find((b) => b.id === id);
+                const prevReviews = Number(target?.total_reviews || 0);
+                const prevRating = Number(target?.rating || 4.9);
+                const nextReviews = prevReviews + 1;
+                const nextRating = Number((((prevRating * prevReviews) + submittedRating) / nextReviews).toFixed(1));
+                if (id) {
+                    setBarbers((prev) =>
+                        prev.map((b) => (b.id === id ? { ...b, rating: nextRating, total_reviews: nextReviews } : b))
+                    );
+                }
+                return json({ success: true, message: 'Thank you for rating!', rating: nextRating, total_reviews: nextReviews });
             }
             if (p === '/booking/get-slots') {
                 return json({
