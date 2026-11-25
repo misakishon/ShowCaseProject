@@ -1,0 +1,604 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.jsx';
+
+@font-face {
+    font-family: 'Picture';
+    src: url('/fonts/Picture.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-sans: 'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-condensed: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+}
+
+/* =========================================================
+   HANDWRITTEN ANNOTATION & CURVED ARROW
+========================================================= */
+
+.handwritten-annotation {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: -0.35rem;
+    margin-bottom: 0.1rem;
+    max-width: 100%;
+    color: #7c3aed;
+    pointer-events: none;
+    user-select: none;
+}
+
+.dark .handwritten-annotation {
+    color: #a78bfa;
+}
+
+.handwritten-annotation__label {
+    display: inline-block;
+    font-family: 'Picture', cursive;
+    font-size: 1.35rem;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    transform: rotate(-5deg);
+    transform-origin: center;
+    white-space: nowrap;
+}
+
+.handwritten-annotation__arrow {
+    position: absolute;
+    left: 100%;
+    top: -0.15rem;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+@keyframes drawArrowShaft {
+    0% {
+        stroke-dashoffset: 90;
+        opacity: 0;
+    }
+    24% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    88% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: 90;
+        opacity: 0;
+    }
+}
+
+@keyframes drawArrowHead {
+    0%,
+    20% {
+        stroke-dashoffset: 40;
+        opacity: 0;
+    }
+    36% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    88% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: 40;
+        opacity: 0;
+    }
+}
+
+.handwritten-arrow-shaft {
+    stroke-dasharray: 90;
+    animation: drawArrowShaft 4.4s ease-in-out infinite;
+}
+
+.handwritten-arrow-head {
+    stroke-dasharray: 40;
+    animation: drawArrowHead 4.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .handwritten-arrow-shaft,
+    .handwritten-arrow-head {
+        animation: none;
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   PORTFOLIO-STYLE PROJECT SHOWCASE CARDS & DEVICE MOCKUPS
+========================================================= */
+
+#project-showcase {
+    --showcase-accent: #7c3aed;
+    --showcase-border: #e6e3dc;
+    --showcase-shadow: 0 12px 28px -10px rgba(45, 30, 60, 0.08), 0 3px 8px rgba(0, 0, 0, 0.04);
+    --showcase-hover-shadow: 0 20px 42px -12px rgba(124, 58, 237, 0.22), 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.dark #project-showcase {
+    --showcase-accent: #a78bfa;
+    --showcase-border: #272833;
+    --showcase-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.55), 0 3px 10px rgba(0, 0, 0, 0.25);
+    --showcase-hover-shadow: 0 22px 48px -12px rgba(167, 139, 250, 0.28), 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+
+#project-showcase .showcase-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding-top: 24px;
+}
+
+@media (min-width: 640px) {
+    #project-showcase .showcase-stage {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    #project-showcase .showcase-stage {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+#project-showcase .showcase-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 20px;
+    background-color: #faf8f5;
+    border: 1px solid var(--showcase-border);
+    box-shadow: var(--showcase-shadow);
+    overflow: visible;
+    transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), border-color 240ms ease, box-shadow 240ms ease;
+    text-decoration: none;
+}
+
+.dark #project-showcase .showcase-card {
+    background-color: #17181f;
+}
+
+#project-showcase .showcase-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 58, 237, 0.4);
+    box-shadow: var(--showcase-hover-shadow);
+}
+
+#project-showcase .showcase-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    padding: 24px 14px 10px 14px;
+    display: flex;
+    align-items: flex-end;
+    overflow: visible;
+}
+
+#project-showcase .showcase-laptop {
+    position: relative;
+    width: 79%;
+    margin-bottom: 8px;
+    z-index: 4;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.16));
+}
+
+.dark #project-showcase .showcase-laptop {
+    filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5));
+}
+
+#project-showcase .showcase-preview.is-phone-right .showcase-laptop {
+    margin-left: 2%;
+    margin-right: auto;
+}
+
+#project-showcase .showcase-preview.is-laptop-only .showcase-laptop {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#project-showcase .showcase-laptop-screen {
+    background: #191a21;
+    border: 3.5px solid #23242c;
+    border-bottom: 2px solid #1c1d23;
+    border-radius: 7px 7px 0 0;
+    position: relative;
+    padding: 1px;
+}
+
+#project-showcase .showcase-laptop-camera {
+    width: 3.5px;
+    height: 3.5px;
+    background: #3e3f4d;
+    border-radius: 50%;
+    margin: 1px auto 2px;
+}
+
+#project-showcase .showcase-laptop-display {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #121316;
+    border-radius: 3px;
+}
+
+#project-showcase .showcase-laptop-display img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+#project-showcase .showcase-laptop-base {
+    position: relative;
+    width: 103%;
+    left: -1.5%;
+    height: 6px;
+    background: linear-gradient(to bottom, #7e808b 0%, #4f515c 50%, #35363e 100%);
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+}
+
+#project-showcase .showcase-laptop-notch {
+    width: 34px;
+    height: 2px;
+    background: #25262e;
+    margin: 0 auto;
+    border-radius: 0 0 2px 2px;
+}
+
+#project-showcase .showcase-phone-wrapper {
+    position: absolute;
+    bottom: 12px;
+    right: 8px;
+    width: 28%;
+    max-width: 104px;
+    z-index: 15;
+    transform-origin: bottom center;
+    filter: drop-shadow(-4px 12px 18px rgba(0, 0, 0, 0.36));
+}
+
+.dark #project-showcase .showcase-phone-wrapper {
+    filter: drop-shadow(-6px 14px 24px rgba(0, 0, 0, 0.65));
+}
+
+#project-showcase .showcase-phone {
+    position: relative;
+    border: 3.5px solid #1a1b22;
+    border-radius: 15px;
+    background: #111216;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#project-showcase .showcase-card:hover .showcase-phone {
+    transform: translateY(-4px) scale(1.02);
+}
+
+#project-showcase .showcase-phone-island {
+    position: absolute;
+    top: 3.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26%;
+    height: 3.5px;
+    background: #2b2c36;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+#project-showcase .showcase-phone-screen {
+    width: 100%;
+    aspect-ratio: 390 / 844;
+    overflow: hidden;
+    background: #0f1013;
+    border-radius: 11px;
+}
+
+#project-showcase .showcase-phone-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+#project-showcase .showcase-reflection-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 24px;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.2;
+    filter: blur(4px);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 80%);
+    z-index: 1;
+    transform: scaleY(-1);
+}
+
+#project-showcase .showcase-preview.is-phone-right .showcase-reflection-laptop {
+    width: 79%;
+    margin-left: 2%;
+    margin-right: auto;
+}
+
+#project-showcase .showcase-preview.is-laptop-only .showcase-reflection-laptop {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#project-showcase .showcase-reflection-laptop img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: bottom;
+    display: block;
+}
+
+#project-showcase .showcase-reflection-phone-wrapper {
+    position: absolute;
+    right: 8px;
+    bottom: 0;
+    width: 28%;
+    max-width: 104px;
+    transform-origin: bottom center;
+}
+
+#project-showcase .showcase-reflection-phone {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#project-showcase .showcase-reflection-phone img {
+    width: 100%;
+    aspect-ratio: 390 / 844;
+    object-fit: cover;
+    object-position: bottom;
+    display: block;
+}
+
+#project-showcase .showcase-img-light {
+    display: block !important;
+}
+
+#project-showcase .showcase-img-dark {
+    display: none !important;
+}
+
+.dark #project-showcase .showcase-img-light,
+html[data-theme="dark"] #project-showcase .showcase-img-light {
+    display: none !important;
+}
+
+.dark #project-showcase .showcase-img-dark,
+html[data-theme="dark"] #project-showcase .showcase-img-dark {
+    display: block !important;
+}
+
+/* =========================================================
+   PROJECTS PAGE: EDITORIAL 2-COLUMN MULTI-DEVICE SHOWCASE
+========================================================= */
+
+#project-showcase.showcase-editorial .editorial-macbook {
+    filter: drop-shadow(0 20px 36px rgba(15, 18, 28, 0.18));
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.dark #project-showcase.showcase-editorial .editorial-macbook {
+    filter: drop-shadow(0 24px 44px rgba(0, 0, 0, 0.65));
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-lid {
+    position: relative;
+    background: #14151b;
+    border: 2.5px solid #2b2d38;
+    border-bottom: 1.5px solid #1d1e26;
+    border-radius: 12px 12px 0 0;
+    padding: 4px 5px 0 5px;
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-camera {
+    width: 4px;
+    height: 4px;
+    background: #3b3d4a;
+    border-radius: 50%;
+    margin: 1px auto 3px;
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-screen {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #0f1014;
+    border-radius: 4px 4px 0 0;
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-chin {
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #171820;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 6.5px;
+    letter-spacing: 0.08em;
+    color: rgba(200, 204, 216, 0.65);
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-base {
+    position: relative;
+    width: 108%;
+    left: -4%;
+    height: 8px;
+    background: linear-gradient(to bottom, #d4d7de 0%, #9ea2ad 48%, #545761 100%);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+}
+
+.dark #project-showcase.showcase-editorial .editorial-macbook-base {
+    background: linear-gradient(to bottom, #8d909b 0%, #585b66 48%, #2e3038 100%);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.55);
+}
+
+#project-showcase.showcase-editorial .editorial-macbook-notch {
+    width: 44px;
+    height: 3px;
+    background: #6c707a;
+    margin: 0 auto;
+    border-radius: 0 0 3px 3px;
+}
+
+.dark #project-showcase.showcase-editorial .editorial-macbook-notch {
+    background: #25262e;
+}
+
+/* Bottom-Left Miniature MacBook Overlay */
+#project-showcase.showcase-editorial .editorial-mini-macbook {
+    filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.32));
+}
+
+.dark #project-showcase.showcase-editorial .editorial-mini-macbook {
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.72));
+}
+
+#project-showcase.showcase-editorial .editorial-mini-macbook-lid {
+    background: #14151b;
+    border: 2px solid #2b2d38;
+    border-bottom: 1.5px solid #1d1e26;
+    border-radius: 6px 6px 0 0;
+    padding: 3px 3px 2px 3px;
+}
+
+#project-showcase.showcase-editorial .editorial-mini-macbook-screen {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #0f1014;
+    border-radius: 2px;
+}
+
+#project-showcase.showcase-editorial .editorial-mini-macbook-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+#project-showcase.showcase-editorial .editorial-mini-macbook-base {
+    position: relative;
+    width: 110%;
+    left: -5%;
+    height: 4.5px;
+    background: linear-gradient(to bottom, #d4d7de 0%, #9ea2ad 50%, #545761 100%);
+    border-radius: 0 0 4px 4px;
+}
+
+.dark #project-showcase.showcase-editorial .editorial-mini-macbook-base {
+    background: linear-gradient(to bottom, #8d909b 0%, #585b66 50%, #2e3038 100%);
+}
+
+#project-showcase.showcase-editorial .editorial-mini-macbook-notch {
+    width: 20px;
+    height: 1.5px;
+    background: #6c707a;
+    margin: 0 auto;
+    border-radius: 0 0 2px 2px;
+}
+
+/* Right Upright Mobile Phone Card Overlay */
+#project-showcase.showcase-editorial .editorial-upright-phone {
+    filter: drop-shadow(0 18px 34px rgba(15, 18, 28, 0.24));
+}
+
+.dark #project-showcase.showcase-editorial .editorial-upright-phone {
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.72));
+}
+
+#project-showcase.showcase-editorial .editorial-upright-phone-frame {
+    position: relative;
+    border-radius: 18px;
+    padding: 4px;
+    background: #ffffff;
+    border: 1px solid rgba(228, 228, 231, 0.9);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.dark #project-showcase.showcase-editorial .editorial-upright-phone-frame {
+    background: #181920;
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+#project-showcase.showcase-editorial .editorial-upright-phone-island {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26%;
+    height: 3.5px;
+    background: rgba(24, 24, 27, 0.18);
+    border-radius: 999px;
+    z-index: 10;
+}
+
+.dark #project-showcase.showcase-editorial .editorial-upright-phone-island {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+#project-showcase.showcase-editorial .editorial-upright-phone-screen {
+    width: 100%;
+    aspect-ratio: 390 / 844;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+
+.dark #project-showcase.showcase-editorial .editorial-upright-phone-screen {
+    background: #0f1014;
+}
+
+#project-showcase.showcase-editorial .editorial-upright-phone-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
